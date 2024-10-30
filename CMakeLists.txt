@@ -13,7 +13,7 @@ project ("wc")
 
 # Add source to this project's executable.
 # add_executable (wc "wc.cpp" "wc.h" "tokenizer.hpp" "tokenizer.cpp")
-add_executable(wc "wc.cpp" "wc.h" "tokenizer.h" "tokenizer.cpp" "utilities.cpp")
+add_executable(wc "wc.cpp" "wc.h" "tokenizer.h" "tokenizer.cpp" "utilities.cpp" "parser.h" "parser.cpp" "counter-factory.h" "counter.h" "counter-factory.cpp" "bignumber.h" "bignumber.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET wc PROPERTY CXX_STANDARD 20)
