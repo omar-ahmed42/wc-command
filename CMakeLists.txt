@@ -12,7 +12,8 @@ endif()
 project ("wc")
 
 # Add source to this project's executable.
-add_executable (wc "wc.cpp" "wc.h")
+# add_executable (wc "wc.cpp" "wc.h" "tokenizer.hpp" "tokenizer.cpp")
+add_executable(wc "wc.cpp" "wc.h" "tokenizer.h" "tokenizer.cpp" "utilities.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET wc PROPERTY CXX_STANDARD 20)
