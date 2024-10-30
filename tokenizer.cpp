@@ -26,7 +26,10 @@ std::vector<parser::Token> parser::Tokenizer::parse(const std::string& inProgram
 			}
 			break;
 		case '-':
-			if (currentToken.mType == WHITESPACE || currentToken.mType == OPTION) {
+			if (currentToken.mType == WHITESPACE) {
+				currentToken.mType = OPTION;
+			}
+			else if (currentToken.mType == OPTION) {
 				currentToken.mType = OPTION;
 				currentToken.mText.append(1, currentCh);
 			}
