@@ -1,41 +1,47 @@
 #pragma once
 #include <string>
+#include "bignumber.h"
 
 class Counter {
-	std::string value;
+protected:
+	BigNumber value;
 public:
-	std::string getValue() { return this->value; };
-	virtual std::string count(std::string text) = 0;
+	BigNumber getValue() { return this->value; };
+	virtual BigNumber count(std::string text) = 0;
+	virtual void finalize();
+	virtual void reset();
 };
 
 class ByteCounter : public Counter {
 public:
-	std::string count(std::string text) {
-		
-		return "";
-	}
+	BigNumber count(std::string text);
+	void finalize();
 };
 
 class CharacterCounter : public Counter {
-	std::string count(std::string text) {
-		return "";
-	}
+	BigNumber count(std::string text);
+	void finalize();
 };
 
 class NewlineCounter : public Counter {
-	std::string count(std::string text) {
-		return "";
-	}
+	BigNumber count(std::string text);
+	void finalize();
 };
 
 class MaxLineLengthCounter : public Counter {
-	std::string count(std::string text) {
-		return "";
-	}
+private:
+	BigNumber currentLineLength;
+public:
+	BigNumber count(std::string text);
+	void finalize();
+	void reset();
 };
 
 class WordCounter : public Counter {
-	std::string count(std::string text) {
-		return "";
-	}
+private:
+	BigNumber currentWordLength;
+public:
+	BigNumber count(std::string text);
+	void finalize();
+	void reset();
 };
