@@ -18,6 +18,10 @@ int main(int argc, const char* argv[]) {
 		std::unordered_set<parser::Option> parsedOptions = parser.getOptions();
 
 		std::vector<Counter*> counters;
+		if (parsedOptions.contains(parser::Option::HELP)) {
+			std::cout << "Usage: wc [OPTION]... [FILE]...\n  or:  wc [OPTION]... --files0-from=F\nPrint newline, word, and byte counts for each FILE, and a total line if\nmore than one FILE is specified.  A word is a non-zero-length sequence of\ncharacters delimited by white space.\n\nWith no FILE, or when FILE is -, read standard input.\n\nThe options below may be used to select which counts are printed, always in\nthe following order: newline, word, character, byte, maximum line length.\n  -c, --bytes            print the byte counts\n  -m, --chars            print the character counts\n  -l, --lines            print the newline counts\n      --files0-from=F    read input from the files specified by\n                           NUL-terminated names in file F;\n                           If F is - then read names from standard input\n  -L, --max-line-length  print the maximum display width\n  -w, --words            print the word counts\n      --help     display this help and exit\n      --version  output version information and exit\n\nGNU coreutils online help: <https://www.gnu.org/software/coreutils/>\nFull documentation <https://www.gnu.org/software/coreutils/wc>\nor available locally via: info '(coreutils) wc invocation'";
+				return 0;
+		}
 		if (!parsedOptions.empty()) {
 			for (auto& option : parsedOptions) {
 				Counter* counter(CounterFactory::createCounter(option));

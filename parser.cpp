@@ -5,12 +5,13 @@ void parser::Parser::parse(const std::vector<parser::Token> tokens)
 {
 	for (std::vector<parser::Token>::const_iterator currentToken = tokens.cbegin(); currentToken != tokens.cend(); currentToken++) {
 		if (isOption(*currentToken)) {
+			// TODO: Add -wcl case (complex options with a single "-"), also handle --help option
 			if (isPrintByteCount(*currentToken)) { options.insert(PRINT_BYTE_COUNT);}
 			else if (isPrintCharacterCount(*currentToken)) { options.insert(PRINT_CHARACTER_COUNT); }
 			else if (isPrintNewlineCount(*currentToken)) { options.insert(PRINT_NEWLINE_COUNT); }
 			else if (isPrintMaxLineLength(*currentToken)) { options.insert(PRINT_MAXLINE_LENGTH); }
 			else if (isPrintWordCount(*currentToken)) { options.insert(PRINT_WORD_COUNT); }
-			//else if (currentToken->mText == "-help") {}
+			else if (currentToken->mText == "-help") { options.insert(HELP); break; }
 			else { throw std::runtime_error("wc: unknown option -- " + currentToken->mText + "\nTry \'wc --help\' for more information."); }
 		}
 		else if (currentToken->mType == STRING_LITERAL) { filenames.push_back(currentToken->mText); }

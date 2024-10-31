@@ -10,7 +10,8 @@ namespace parser {
 		PRINT_BYTE_COUNT,
 		PRINT_NEWLINE_COUNT,
 		PRINT_MAXLINE_LENGTH,
-		PRINT_WORD_COUNT
+		PRINT_WORD_COUNT,
+		HELP
 	};
 
 	class Parser {
