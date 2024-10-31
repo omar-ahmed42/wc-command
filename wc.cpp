@@ -17,12 +17,17 @@ int main(int argc, const char* argv[]) {
 		parser.parse(tokens);
 		std::unordered_set<parser::Option> parsedOptions = parser.getOptions();
 
-		std::vector<Counter> counters;
+		std::vector<Counter*> counters;
 		if (!parsedOptions.empty()) {
 			for (auto& option : parsedOptions) {
-				Counter* counter = CounterFactory::createCounter(option);
-				counters.push_back(*counter);
+				Counter* counter(CounterFactory::createCounter(option));
+				counters.push_back(counter);
 			}
+		}
+		else {
+			counters.push_back(CounterFactory::createCounter(parser::Option::PRINT_NEWLINE_COUNT));
+			counters.push_back(CounterFactory::createCounter(parser::Option::PRINT_WORD_COUNT));
+			counters.push_back(CounterFactory::createCounter(parser::Option::PRINT_BYTE_COUNT));
 		}
 
 		std::vector<std::string> parsedFilenames = parser.getFilenames();
@@ -33,16 +38,23 @@ int main(int argc, const char* argv[]) {
 				std::unique_ptr<char[]> buffer(new char[bufferSize]);
 				while (file) {
 					file.read(buffer.get(), bufferSize);
-					std::string text(buffer.get());
+					size_t gcount = file.gcount();
+					std::string text(buffer.get(), gcount);
 					for (auto& counter : counters) {
-						counter.count(text);
+						counter->count(text);
 					}
 				}
-			}
-		}
+				
+				std::cout << "  ";
+				for (auto& counter : counters) {
+					counter->finalize();
+					std::cout << counter->getValue() << " ";
+					counter->reset();
+				}
 
-		for (auto& counter : counters) {
-			std::cout << counter.getValue() << std::endl;
+				std::cout << filename << std::endl;
+				file.close();
+			}
 		}
 
 
