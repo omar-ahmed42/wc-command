@@ -33,7 +33,7 @@ int main(int argc, const char* argv[]) {
 		std::vector<std::string> parsedFilenames = parser.getFilenames();
 		if (!parsedFilenames.empty()) {
 			for (auto& filename : parsedFilenames) {
-				std::ifstream file(filename);
+				std::ifstream file(filename, std::ios::binary);
 				constexpr size_t bufferSize = static_cast<size_t>(1024) * 1024;
 				std::unique_ptr<char[]> buffer(new char[bufferSize]);
 				while (file) {
