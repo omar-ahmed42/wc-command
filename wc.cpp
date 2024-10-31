@@ -3,6 +3,7 @@
 
 #include "wc.h"
 #include <fstream>
+#include <filesystem>
 
 int main(int argc, const char* argv[]) {
 	parser::Tokenizer tokenizer;
@@ -43,6 +44,10 @@ int main(int argc, const char* argv[]) {
 		std::vector<std::string> parsedFilenames = parser.getFilenames();
 		if (!parsedFilenames.empty()) {
 			for (auto& filename : parsedFilenames) {
+				if (!std::filesystem::exists(filename)) {
+					std::cerr << "wc: " << filename << " No such file or directory" << std::endl;
+					continue;
+				}
 				std::ifstream file(filename, std::ios::binary);
 				constexpr size_t bufferSize = static_cast<size_t>(1024) * 1024;
 				std::unique_ptr<char[]> buffer(new char[bufferSize]);
@@ -55,6 +60,7 @@ int main(int argc, const char* argv[]) {
 					}
 				}
 
+				file.close();
 				std::cout << "  ";
 				for (auto& counter : counters) {
 					counter->finalize();
@@ -63,7 +69,6 @@ int main(int argc, const char* argv[]) {
 				}
 
 				std::cout << filename << std::endl;
-				file.close();
 			}
 		}
 
