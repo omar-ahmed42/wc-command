@@ -4,6 +4,7 @@
 #include "wc.h"
 #include <fstream>
 #include <filesystem>
+#include <io.h>
 
 int main(int argc, const char* argv[]) {
 	parser::Tokenizer tokenizer;
@@ -41,9 +42,37 @@ int main(int argc, const char* argv[]) {
 			counters.push_back(CounterFactory::createCounter(parser::Option::PRINT_BYTE_COUNT));
 		}
 
+		int __cdecl inFileno = fileno(stdin);
+		bool isInputRedirected = !_isatty(inFileno) || !isatty(inFileno);
+		if (isInputRedirected) {
+			constexpr size_t bufferSize = static_cast<size_t>(1024) * 1024;
+			std::unique_ptr<char[]> buffer(new char[bufferSize]);
+
+			std::istream* redirectedStream;
+			while ((redirectedStream = &std::cin.read(buffer.get(), static_cast<std::streamsize>(1024) * 1024)) && redirectedStream->gcount() > 0) {
+				size_t gcount = redirectedStream->gcount();
+
+				std::string text(buffer.get(), gcount);
+
+				for (auto& counter : counters) {
+					counter->count(text);
+				}
+			}
+
+			std::cout << "  ";
+			for (auto& counter : counters) {
+				counter->finalize();
+				std::cout << counter->getValue() << " ";
+				counter->reset();
+			}
+
+			return 1;
+		}
+
 		std::vector<std::string> parsedFilenames = parser.getFilenames();
 		if (!parsedFilenames.empty()) {
 			for (auto& filename : parsedFilenames) {
+				// TODO: Calculate cummulative values
 				if (!std::filesystem::exists(filename)) {
 					std::cerr << "wc: " << filename << " No such file or directory" << std::endl;
 					continue;
